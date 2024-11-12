@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { Event } from './event.entity';
 
@@ -14,5 +14,20 @@ export class EventsController {
   @Get()
   getEvents(): Event[] {
     return this.eventsService.getEvents();
+  }
+
+  @Get(':id')
+  getEvent(@Param('id') id: string): Event {
+    return this.eventsService.getEventById(Number(id));
+  }
+
+  @Patch(':id')
+  updateEvent(@Param('id') id: string, @Body() updatedData: Partial<Event>): Event {
+    return this.eventsService.updateEvent(Number(id), updatedData);
+  }
+
+  @Delete(':id')
+  deleteEvent(@Param('id') id: string): void {
+    return this.eventsService.deleteEvent(Number(id));
   }
 }

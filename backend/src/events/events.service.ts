@@ -22,5 +22,15 @@ export class EventsService {
     return event;
   }
 
-  // Additional update and delete methods can be added here later
+  updateEvent(id: number, updatedData: Partial<Event>): Event {
+    const event = this.getEventById(id);
+    Object.assign(event, updatedData);
+    return event;
+  }
+
+  deleteEvent(id: number): void {
+    const index = this.events.findIndex(e => e.id === id);
+    if (index === -1) throw new NotFoundException('Event not found');
+    this.events.splice(index, 1);
+  }
 }
