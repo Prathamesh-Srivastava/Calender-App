@@ -1,36 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 
-const EventForm = ({ onSave, initialData }) => {
-  const [title, setTitle] = useState(initialData?.title || '');
-  const [date, setDate] = useState(initialData?.date || '');
-  const [description, setDescription] = useState(initialData?.description || '');
+const EventForm = ({ initialDate, onSave, onClose }) => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [media, setMedia] = useState(null);
+
+  const onDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    const url = URL.createObjectURL(file);
+    const type = file.type.startsWith('image') ? 'image' : 'video';
+    setMedia({ url, type });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ title, date, description });
+    onSave({title, description, media });
+    onClose();
   };
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
     <form onSubmit={handleSubmit}>
+      <h3>Event on {initialDate ? initialDate.toDateString() : ''}</h3>
       <input
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Title"
-        required
-      />
-      <input
-        type="datetime-local"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
+        placeholder="Event Title"
         required
       />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        placeholder="Description"
+        placeholder="Event Description"
       />
-      <button type="submit">Save</button>
+      <div {...getRootProps()} style={{ border: '1px dashed gray', padding: '10px', cursor: 'pointer' }}>
+        <input {...getInputProps()} />
+        {media ? (
+          media.type === 'image' ? (
+            <img src={media.url} alt="Preview" width="100" />
+          ) : (
+            <video src={media.url} controls width="200" />
+          )
+        ) : (
+          <p>Drag 'n' drop a file here, or click to select one</p>
+        )}
+      </div>
+      <button type="submit">Save Event</button>
+      <button type="button" onClick={onClose}>Cancel</button>
     </form>
   );
 };

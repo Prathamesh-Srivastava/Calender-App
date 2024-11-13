@@ -9,6 +9,7 @@ export class EventsService {
   createEvent(eventData: Omit<Event, 'id'>): Event {
     const newEvent = { id: this.idCounter++, ...eventData };
     this.events.push(newEvent);
+    console.log(this.events);
     return newEvent;
   }
 
