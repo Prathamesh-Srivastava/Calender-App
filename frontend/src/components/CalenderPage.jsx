@@ -3,18 +3,30 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import EventForm from './EventForm';
 import Modal from 'react-modal';
-import { fetchEvents, createEvent } from '../api/eventsApi';
+import { fetchEvents, createEvent, updateEvent, deleteEvent } from '../api/eventsApi';
 
 const CalendarPage = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [eventToEdit, setEventToEdit] = useState(null);
+
   useEffect(() => {
     fetchEvents().then(setEvents);
     console.log(events);
   },[selectedDate]);
 
+  const handleEdit = (event) =>{
+    setEventToEdit(event);
+    setIsModalOpen(true);
+  }
+
+  const handleDeleteEvent = (id)=>{
+    deleteEvent(id).then(() => {
+      setEvents(events.filter(event => event.id !== id));
+    });
+  }
 
   const eventsOnSelectedDate = selectedDate
   ? events.filter(event => {
@@ -43,11 +55,18 @@ const CalendarPage = () => {
     setIsModalOpen(false);
   };
 
-  const handleEventSave = ({title, description, media}) => {
+  const handleEventSave = ({id, title, description, media}) => {
     const eventData = {title, selectedDate, description, media}
-    createEvent(eventData).then(newEvent => {
-      setEvents([...events, newEvent]);
-    });
+    if(id){
+      updateEvent(id, eventData).then(updatedEvent => {
+        setEvents(events.map(event => (event.id === id ? updatedEvent : event)));
+      });
+    }else{
+      createEvent(eventData).then(newEvent => {
+        setEvents([...events, newEvent]);
+      });
+    }
+
     handleModalClose(); 
   };
 
@@ -79,6 +98,8 @@ const CalendarPage = () => {
                   <source src={event.media.url} type="video/mp4" />
                 </video>
               )}
+              <button onClick={() => handleEdit(event)}>Edit</button>
+              <button onClick={() => handleDeleteEvent(event.id)}>Delete</button>
               </li>
             ))}
           </ul>
@@ -90,6 +111,7 @@ const CalendarPage = () => {
       <Modal isOpen={isModalOpen} onRequestClose={handleModalClose}>
         <EventForm
           initialDate={selectedDate}
+          eventToEdit = {eventToEdit}
           onClose={handleModalClose}
           onSave={handleEventSave}
         />

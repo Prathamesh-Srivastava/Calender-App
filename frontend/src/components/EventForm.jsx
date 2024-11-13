@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-const EventForm = ({ initialDate, onSave, onClose }) => {
+const EventForm = ({ initialDate, eventToEdit, onSave, onClose }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [media, setMedia] = useState(null);
@@ -15,7 +15,7 @@ const EventForm = ({ initialDate, onSave, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({title, description, media });
+    onSave({id: eventToEdit ? eventToEdit.id : null, title, description, media  });
     onClose();
   };
 
