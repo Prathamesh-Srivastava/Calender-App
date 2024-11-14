@@ -1,5 +1,6 @@
 import React from 'react';
-import CalendarPage from './components/CalenderPage';
+import CalendarPage from './components/CalendarPage';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
