@@ -26,13 +26,13 @@
   
   .event-titles {
     font-size: 0.8em;
-    color: #444;
+    color: #0c0c0c;
   }
   
   .event-title {
     margin: 2px 0;
     padding: 2px;
-    background-color: #f0f0f5;
+    background-color: #b9b9b9;
     border-radius: 4px;
     white-space: nowrap;
     overflow: hidden;

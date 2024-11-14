@@ -6,6 +6,7 @@
     padding: 20px;
     height: 100vh;
     position: relative;
+    background-color: rgb(57, 57, 118);
   }
   
   .calendar-container {
@@ -15,6 +16,7 @@
     align-items: center;
     justify-content: flex-start;
     width: 100%;
+    color: white;
   }
   
   .month-nav {
@@ -44,6 +46,7 @@
     cursor: pointer;
     border: 1px solid #ddd;
     border-radius: 5px;
+    color: black;
   }
   
   .empty-cell {

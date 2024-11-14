@@ -33,10 +33,10 @@ const EventFormPage = ({ eventToEdit, onClose, onSave }) => {
 
   return (
     <div className="event-form-page">
-      <h2>{eventToEdit ? 'Edit Event' : 'Create Event'}</h2>
+      <h2 style={{ color: 'white' }}>{eventToEdit ? 'Edit Event' : 'Create Event'}</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Title</label>
+        <label style={{ color: 'white' }}>Title</label>
           <input
             type="text"
             className="form-control"
@@ -47,7 +47,7 @@ const EventFormPage = ({ eventToEdit, onClose, onSave }) => {
         </div>
         
         <div className="form-group">
-          <label>Description</label>
+          <label style={{ color: 'white' }}>Description</label>
           <textarea
             className="form-control"
             value={description}
@@ -58,7 +58,7 @@ const EventFormPage = ({ eventToEdit, onClose, onSave }) => {
 
         {/* Time Input */}
         <div className="form-group">
-          <label>Time</label>
+          <label style={{ color: 'white' }}>Time</label>
           <input
             type="time"
             className="form-control"
@@ -88,7 +88,7 @@ const EventFormPage = ({ eventToEdit, onClose, onSave }) => {
               <video src={media.url} controls width="200" />
             )
           ) : (
-            <p>Drag 'n' drop a file here, or click to select one</p>
+            <p style={{ color: 'white' }}>Drag 'n' drop a file here, or click to select one</p>
           )}
         </div>
 
