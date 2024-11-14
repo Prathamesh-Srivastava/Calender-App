@@ -5,6 +5,8 @@ import { fetchEvents, createEvent, updateEvent, deleteEvent } from '../api/event
 import Calendar from './Calendar';
 import DateModalPage from './DateModalPage';
 import EventFormPage from './EventFormPage';
+import Notification from './Notification';
+
 
 const CalendarPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -13,10 +15,37 @@ const CalendarPage = () => {
   const [isEventFormModalOpen, setIsEventFormModalOpen] = useState(false);
   const [eventToEdit, setEventToEdit] = useState(null);
   const [eventsOnSelectedDate, setEventsOnSelectedDate] = useState([]);
-
+  const [alarmOn, setAlarmOn] = useState(false);
+  const [eventForAlarm, setEventForAlarm] = useState(null);
+  
   useEffect(() => {
     fetchEvents().then(setEvents);
   }, []);
+
+
+useEffect(() => {
+  const checkEventTimes = () => {
+    const now = new Date();
+    const currentTimeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+    events.forEach((event) => {
+      const eventTime = event.time;
+      const eventDate = new Date(event.date);
+      console.log(eventTime+" "+currentTimeString);
+
+      if (eventDate.toDateString() === now.toDateString() && eventTime === currentTimeString) {
+        console.log("Same:"+ eventTime+" "+currentTimeString);
+        setAlarmOn(true);
+        setEventForAlarm(event);
+      }
+    });
+  };
+
+  const intervalId = setInterval(checkEventTimes, 60000);
+
+  return () => clearInterval(intervalId);
+});
+  
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -84,9 +113,29 @@ const CalendarPage = () => {
     setSelectedDate(new Date(selectedDate.getFullYear(), selectedDate.getMonth() - 1, 1));
   };
 
+  const handleDismiss = () => {
+    setAlarmOn(false);
+  };
+
+  const handleSnooze = () => {
+    console.log('Snoozed for 5 minute');
+    setAlarmOn(false);
+    setTimeout(() => setAlarmOn(true), 5 * 60 * 1000);
+  };
+
   return (
     <div className="calendar-page-container">
-      {/* Conditional Rendering of Components */}
+      {alarmOn && (
+        <Notification
+          title={eventForAlarm.title}
+          description={eventForAlarm.description}
+          time={eventForAlarm.time}
+          image={eventForAlarm.media}
+          onDismiss={handleDismiss}
+          onSnooze={handleSnooze}
+        />
+      )}
+
       {isDateModalOpen && !isEventFormModalOpen && (
         <DateModalPage
           selectedDate={selectedDate}
